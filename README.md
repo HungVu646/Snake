@@ -1,6 +1,6 @@
 # 🐍 Snake AI - Trò chơi Rắn săn mồi ứng dụng thuật toán A*
 
-> Đồ án xây dựng trò chơi **Rắn săn mồi (Snake Game)** sử dụng **thuật toán A*** để tự động tìm đường đến mục tiêu, tránh va chạm với chướng ngại vật động và lựa chọn mục tiêu thông minh.
+> Dự án xây dựng trò chơi **Rắn săn mồi (Snake Game)** sử dụng **thuật toán A*** để tự động tìm đường đến mục tiêu, tránh va chạm với chướng ngại vật động và lựa chọn mục tiêu thông minh.
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)
 ![Pygame](https://img.shields.io/badge/Pygame-2.x-green?logo=pygame)

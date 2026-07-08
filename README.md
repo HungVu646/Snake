@@ -131,7 +131,7 @@ python main.py
 
 # 📸 Demo
 
-Demo Link: <a href="https://drive.google.com/drive/folders/1bjdkyvE1fXJqvjSnJUcdbkl9AvqBGM8U?hl=vi">Demo Game Snake A*</a>
+Demo Link: <a href="https://drive.google.com/file/d/1Nbu5WmFbzJ-COTXK8lOHlVEuKkkdF-8b/view?usp=sharing">Demo Game Snake A*</a>
 
 ---
 

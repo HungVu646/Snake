@@ -260,20 +260,24 @@ class SnakeGame:
         space = (pygame.font.match_font("space grotesk") or
                  pygame.font.match_font("segoeui") or
                  pygame.font.match_font("arial") or None)
-        self.font_big = pygame.font.Font(orbit, 34)
+        self.font_big = pygame.font.Font(orbit, 41)
         self.font_big.set_bold(True)
-        self.font_title = pygame.font.Font(orbit, 28)
+        self.font_title = pygame.font.Font(orbit, 33)
         self.font_title.set_bold(True)
-        self.font_num = pygame.font.Font(orbit, 17)
+        self.font_num = pygame.font.Font(orbit, 22)
         self.font_num.set_bold(True)
-        self.font = pygame.font.Font(space, 18)
+        self.font = pygame.font.Font(space, 23)
         self.font.set_bold(True)
-        self.font_bold = pygame.font.Font(space, 18)
+        self.font_bold = pygame.font.Font(space, 23)
         self.font_bold.set_bold(True)
-        self.font_small = pygame.font.Font(space, 13)
+        self.font_small = pygame.font.Font(space, 18)
         self.font_small.set_bold(True)
-        self.font_tiny = pygame.font.Font(space, 10)
+        self.font_tiny = pygame.font.Font(space, 15)
         self.font_tiny.set_bold(True)
+
+        self.font_desc = pygame.font.Font(space, 12)
+        self.font_desc.set_bold(False)
+
         self.mode = "menu"
         self.level_idx = 0
         self.skin_idx = 0
@@ -762,36 +766,63 @@ class SnakeGame:
             self.buttons.append((rr, f"skin:{i}"))
         y += skin_card_h + 16
 
-        r = card(y, 104, "x Cấp độ")
-        names=[("♧", "Dễ", "15×15\n3 vật cản"), ("▲", "Vừa", "20×20\n8 vật cản"), ("☠", "Khó", "26×26\n16 vật cản")]
+        r = card(y, 124, "x Cấp độ")
+        names=[("♧", "Dễ", "15×15", "3 vật cản"), ("▲", "Vừa", "20×20", "8 vật cản"), ("☠", "Khó", "26×26", "16 vật cản")]
         bw=(menu_w-48)//3
-        for i,(ico, name, sub) in enumerate(names):
-            rr=pygame.Rect(x0+16+i*(bw+8), y+34, bw, 58)
+        for i,(ico, name, grid, obs) in enumerate(names):
+            rr=pygame.Rect(x0+16+i*(bw+8), y+36, bw, 76)
             sel=i==self.level_idx
-            rounded_rect(self.screen, rr, (10,35,31) if sel else (31,33,45), 10, GREEN if sel else (55,60,80), 1)
-            draw_text(self.screen, ico, self.font_bold, TX, rr.centerx, rr.y+8, True)
-            draw_text(self.screen, name, self.font_tiny, GREEN if sel else TX, rr.centerx, rr.y+29, True)
-            lines=sub.split('\n')
-            draw_text(self.screen, lines[0], self.font_tiny, TX2, rr.centerx, rr.y+42, True)
-            draw_text(self.screen, lines[1], self.font_tiny, TX2, rr.centerx, rr.y+52, True)
-            self.buttons.append((rr, f"level:{i}"))
-        y += 120
 
-        opts=[("showPath","Hiện đường đi","Vẽ đường A* tìm được"), ("showExplored","Hiện node đã duyệt","Open list / Closed list"), ("showGrid","Hiện lưới ô vuông",""),
-              ("bonusFood","— Thức ăn thưởng (bonus)","⭐💎⚡ xuất hiện ngẫu nhiên, có giới hạn thời gian"), ("combo","— Combo điểm","Ăn liên tiếp nhanh để nhân điểm"), ("speedBoost","— Tăng tốc tạm thời","Thức ăn ⚡ tăng tốc rắn 5 giây"),
-              ("multiFood","— Nhiều mồi (3 mồi)","Xuất hiện 3 mồi, AI chọn mồi an toàn nhất"), ("survivalMode","— Chế độ sinh tồn","Không có mồi, vật cản sinh ra liên tục")]
-        r = card(y, min(304, h-y-58), "o Tuỳ chọn hiển thị")
-        yy=y+35
+            bg_col = (10, 42, 36) if sel else (24, 29, 45)
+            bd_col = GREEN if sel else (62, 70, 94)
+            rounded_rect(self.screen, rr, bg_col, 12, bd_col, 2 if sel else 1)
+
+            draw_text(self.screen, ico, self.font_bold, TX, rr.centerx, rr.y+9, True)
+            draw_text(self.screen, name, self.font_tiny, GREEN if sel else TX, rr.centerx, rr.y+34, True)
+            draw_text(self.screen, grid, self.font_desc, TX2, rr.centerx, rr.y+52, True)
+            draw_text(self.screen, obs, self.font_desc, TX2, rr.centerx, rr.y+66, True)
+            self.buttons.append((rr, f"level:{i}"))
+        y += 142
+
+        opts=[
+            ("showPath","Hiện đường đi","Vẽ đường A* tìm được"),
+            ("showExplored","Hiện node đã duyệt","Open list / Closed list"),
+            ("showGrid","Hiện lưới ô vuông",""),
+            ("bonusFood","— Thức ăn thưởng (bonus)","⭐💎⚡ xuất hiện ngẫu nhiên, có giới hạn thời gian"),
+            ("combo","— Combo điểm","Ăn liên tiếp nhanh để nhân điểm"),
+            ("speedBoost","— Tăng tốc tạm thời","Thức ăn ⚡ tăng tốc rắn 5 giây"),
+            ("multiFood","— Nhiều mồi (3 mồi)","Xuất hiện 3 mồi, AI chọn mồi an toàn nhất"),
+            ("survivalMode","— Chế độ sinh tồn","Không có mồi, vật cản sinh ra liên tục")
+        ]
+
+        opt_row_h = 42
+        opt_gap = 5
+        option_card_h = 38 + len(opts) * opt_row_h + (len(opts) - 1) * opt_gap + 14
+        r = card(y, min(option_card_h, h-y-58), "o Tuỳ chọn hiển thị")
+        yy = y + 36
+
         for idx,(key,label,desc) in enumerate(opts):
-            if yy+28 > r.bottom-8: break
-            row=pygame.Rect(x0+16, yy-2, menu_w-32, 28)
-            draw_text(self.screen, label, self.font_tiny, TX, row.x, row.y+3)
+            if yy + opt_row_h > r.bottom - 10:
+                break
+
+            row = pygame.Rect(x0+16, yy, menu_w-32, opt_row_h)
+            is_on = self.settings[key]
+
+            # Nền từng dòng + viền mờ giúp các mục không bị dính vào nhau.
+            row_bg = (19, 31, 39) if is_on else (20, 25, 39)
+            row_border = (40, 100, 84) if is_on else (46, 55, 78)
+            rounded_rect(self.screen, row, row_bg, 9, row_border, 1)
+
+            draw_text(self.screen, label, self.font_tiny, TX, row.x + 10, row.y + 6)
+
             if desc:
-                draw_text(self.screen, desc, self.font_tiny, TX2, row.x, row.y+15)
-            tr=pygame.Rect(row.right-34, row.y+8, 30, 16)
-            draw_toggle(self.screen, tr, self.settings[key])
+                draw_text(self.screen, desc, self.font_desc, TX2, row.x + 10, row.y + 25)
+
+            tr=pygame.Rect(row.right-40, row.centery-8, 30, 16)
+            draw_toggle(self.screen, tr, is_on)
             self.buttons.append((row, f"toggle:{key}"))
-            yy += 31 if idx < 3 else 32
+            yy += opt_row_h + opt_gap
+
         y = r.bottom + 10
 
         hist = pygame.Rect(x0, y, menu_w, 36)

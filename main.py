@@ -715,7 +715,7 @@ class SnakeGame:
         def card(y, height, label):
             r = pygame.Rect(x0, y, menu_w, height)
             rounded_rect(self.screen, r, (17, 21, 33), 14, (48, 56, 78), 1)
-            draw_text(self.screen, label.upper(), self.font_tiny, TX2, x0 + 18, y + 12)
+            draw_text(self.screen, label.upper(), self.font_desc, TX2, x0 + 18, y + 11)
             return r
 
         y += 42

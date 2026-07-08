@@ -131,7 +131,7 @@ python main.py
 
 # 📸 Demo
 
-Link demo: 
+Link demo: https://drive.google.com/file/d/1Nbu5WmFbzJ-COTXK8lOHlVEuKkkdF-8b/view?usp=drive_link
 
 ---
 

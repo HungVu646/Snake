@@ -33,7 +33,7 @@ PANEL = (20, 26, 42)
 PANEL2 = (15, 20, 33)
 BORDER = (55, 66, 91)
 TX = (227, 234, 248)
-TX2 = (115, 132, 168)
+TX2 = (180, 195, 225)
 GREEN = (0, 224, 138)
 CYAN = (35, 196, 240)
 GOLD = (255, 207, 61)
@@ -95,12 +95,25 @@ def skin_color(colors, t):
 
 
 def draw_text(surf, text, font, color, x, y, center=False):
-    """Vẽ chữ lên surface và trả về vùng chữ vừa vẽ."""
-    img = font.render(str(text), True, color)
+    """Vẽ chữ có viền mỏng để nổi bật hơn trên nền tối."""
+    txt = str(text)
+
+    img = font.render(txt, True, color)
     rect = img.get_rect()
-    rect.center = (x, y) if center else rect.center
-    if not center:
+    if center:
+        rect.center = (x, y)
+    else:
         rect.topleft = (x, y)
+
+    # Viền đen mỏng giúp chữ sáng không bị chìm vào nền tối.
+    outline = font.render(txt, True, (0, 0, 0))
+    for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        surf.blit(outline, rect.move(dx, dy))
+
+    # Đổ bóng nhẹ để chữ có chiều sâu hơn.
+    shadow = font.render(txt, True, (10, 12, 18))
+    surf.blit(shadow, rect.move(2, 2))
+
     surf.blit(img, rect)
     return rect
 
@@ -159,19 +172,49 @@ def radial_circle(surf, x, y, r, inner, mid, outer, glow=None, glow_power=0):
     small = pygame.transform.smoothscale(tmp, (size // HQ, size // HQ))
     surf.blit(small, (int(x - small.get_width()/2), int(y - small.get_height()/2)), special_flags=pygame.BLEND_PREMULTIPLIED)
 
-def gradient_text(surf, text, font, x, y, c1=GREEN, c2=CYAN, center=True):
-    """Vẽ chữ có gradient màu giống tiêu đề HTML."""
-    base = font.render(str(text), True, (255,255,255))
-    grad = pygame.Surface(base.get_size(), pygame.SRCALPHA)
-    w, h = grad.get_size()
-    for xx in range(max(1,w)):
-        col = lerp_color(c1, c2, xx/max(1,w-1))
-        pygame.draw.line(grad, (*col,255), (xx,0), (xx,h))
-    grad.blit(base, (0,0), special_flags=pygame.BLEND_RGBA_MULT)
-    rect = grad.get_rect()
-    rect.center = (x,y) if center else rect.topleft
-    if not center: rect.topleft=(x,y)
-    surf.blit(grad, rect)
+def gradient_text(surface, text, font, x, y,
+                  color_top, color_bottom,
+                  center=False):
+    txt = str(text)
+    base = font.render(txt, True, (255, 255, 255))
+    w, h = base.get_size()
+    bright_top = lerp_color(color_top, (255, 255, 255), 0.25)
+    bright_bottom = lerp_color(color_bottom, (255, 255, 255), 0.15)
+    gradient = pygame.Surface((w, h), pygame.SRCALPHA)
+
+    for iy in range(h):
+        t = iy / max(1, h - 1)
+        r = int(bright_top[0] * (1 - t) + bright_bottom[0] * t)
+        g = int(bright_top[1] * (1 - t) + bright_bottom[1] * t)
+        b = int(bright_top[2] * (1 - t) + bright_bottom[2] * t)
+        pygame.draw.line(gradient, (r, g, b), (0, iy), (w, iy))
+    gradient.blit(base, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+
+    rect = gradient.get_rect()
+    if center:
+        rect.center = (x, y)
+    else:
+        rect.topleft = (x, y)
+
+    shadow = font.render(txt, True, (0, 0, 0))
+    shadow.set_alpha(180)
+    surface.blit(shadow, rect.move(4, 4))
+    glow = font.render(txt, True, bright_bottom)
+    glow.set_alpha(65)
+    for dx, dy in [
+        (-4, 0), (4, 0), (0, -4), (0, 4),
+        (-3, -3), (3, 3), (-3, 3), (3, -3)
+    ]:
+        surface.blit(glow, rect.move(dx, dy))
+    outline = font.render(txt, True, (0, 0, 0))
+    for dx, dy in [
+        (-2, 0), (2, 0), (0, -2), (0, 2),
+        (-2, -2), (2, 2), (-2, 2), (2, -2),
+        (-3, 0), (3, 0), (0, -3), (0, 3)
+    ]:
+        surface.blit(outline, rect.move(dx, dy))
+
+    surface.blit(gradient, rect)
     return rect
 
 def draw_toggle(surf, rect, on):
@@ -218,12 +261,19 @@ class SnakeGame:
                  pygame.font.match_font("segoeui") or
                  pygame.font.match_font("arial") or None)
         self.font_big = pygame.font.Font(orbit, 34)
+        self.font_big.set_bold(True)
         self.font_title = pygame.font.Font(orbit, 28)
+        self.font_title.set_bold(True)
         self.font_num = pygame.font.Font(orbit, 17)
+        self.font_num.set_bold(True)
         self.font = pygame.font.Font(space, 18)
-        self.font_bold = pygame.font.Font(space, 18); self.font_bold.set_bold(True)
+        self.font.set_bold(True)
+        self.font_bold = pygame.font.Font(space, 18)
+        self.font_bold.set_bold(True)
         self.font_small = pygame.font.Font(space, 13)
+        self.font_small.set_bold(True)
         self.font_tiny = pygame.font.Font(space, 10)
+        self.font_tiny.set_bold(True)
         self.mode = "menu"
         self.level_idx = 0
         self.skin_idx = 0

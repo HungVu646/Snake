@@ -1,0 +1,56 @@
+[
+  {
+    "time": "01/07/2026 21:35:47",
+    "player": "Player",
+    "level": "Khó",
+    "score": 2199,
+    "length": 3,
+    "steps": 1129,
+    "reason": "Đâm vào chướng ngại vật!"
+  },
+  {
+    "time": "01/07/2026 23:28:00",
+    "player": "Player",
+    "level": "Khó",
+    "score": 20,
+    "length": 4,
+    "steps": 28,
+    "reason": "Đâm vào tường!"
+  },
+  {
+    "time": "08/07/2026 09:57:40",
+    "player": "Player",
+    "level": "Khó",
+    "score": 1540,
+    "length": 80,
+    "steps": 1508,
+    "reason": "Đâm vào chướng ngại vật!"
+  },
+  {
+    "time": "08/07/2026 10:10:19",
+    "player": "Player",
+    "level": "Khó",
+    "score": 2140,
+    "length": 61,
+    "steps": 891,
+    "reason": "Đâm vào thân mình!"
+  },
+  {
+    "time": "08/07/2026 10:39:19",
+    "player": "Player",
+    "level": "Khó",
+    "score": 1270,
+    "length": 40,
+    "steps": 592,
+    "reason": "Đâm vào thân mình!"
+  },
+  {
+    "time": "08/07/2026 10:48:47",
+    "player": "Player",
+    "level": "Khó",
+    "score": 4210,
+    "length": 83,
+    "steps": 862,
+    "reason": "Đâm vào thân mình!"
+  }
+]

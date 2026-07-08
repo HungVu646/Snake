@@ -1,0 +1,10 @@
+{
+  "playerName": "Player",
+  "skinIndex": 9,
+  "levelIndex": 2,
+  "highScores": {
+    "easy": 0,
+    "medium": 0,
+    "hard": 4210
+  }
+}
